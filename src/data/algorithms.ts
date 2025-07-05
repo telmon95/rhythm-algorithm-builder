@@ -28,7 +28,7 @@ export const algorithms: Algorithm[] = [
     id: "bubble-sort",
     name: "Bubble Sort",
     category: "Sorting",
-    description: "A simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order.",
+    description: "A simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order",
     complexity: {
       time: "O(n²)",
       space: "O(1)"
