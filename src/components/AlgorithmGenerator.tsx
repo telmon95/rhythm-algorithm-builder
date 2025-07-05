@@ -2,10 +2,12 @@ import { useState } from "react";
 import { algorithms, algorithmCategories, Algorithm } from "@/data/algorithms";
 import { AlgorithmCard } from "./AlgorithmCard";
 import { CodeDisplay } from "./CodeDisplay";
+import { SortingVisualizer } from "./SortingVisualizer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Search, Code2, Zap } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowLeft, Search, Code2, Zap, BarChart3 } from "lucide-react";
 
 export const AlgorithmGenerator = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -63,7 +65,7 @@ export const AlgorithmGenerator = () => {
             Perfect for learning, interviews, and reference.
           </p>
           
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <Zap className="w-4 h-4 text-accent" />
               <span>{algorithms.length} Algorithms</span>
@@ -72,75 +74,98 @@ export const AlgorithmGenerator = () => {
               <Code2 className="w-4 h-4 text-accent" />
               <span>Multiple Languages</span>
             </div>
+            <div className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-accent" />
+              <span>Interactive Visualization</span>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 pb-16">
-        {/* Search and Filters */}
-        <div className="mb-8 space-y-4">
-          <div className="relative max-w-md mx-auto">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search algorithms..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 transition-smooth focus:ring-primary/50"
-            />
-          </div>
-          
-          <div className="flex flex-wrap justify-center gap-2">
-            <Button
-              variant={selectedCategory === null ? "default" : "outline"}
-              onClick={() => setSelectedCategory(null)}
-              className="transition-smooth"
-            >
-              All Categories
-            </Button>
-            {algorithmCategories.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category)}
-                className="transition-smooth"
-              >
-                {category}
-              </Button>
-            ))}
-          </div>
-          
-          {selectedCategory && (
-            <div className="text-center">
-              <Badge variant="secondary" className="text-sm">
-                {filteredAlgorithms.length} algorithms in {selectedCategory}
-              </Badge>
-            </div>
-          )}
-        </div>
+        <Tabs defaultValue="explore" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-8">
+            <TabsTrigger value="explore" className="flex items-center gap-2">
+              <Code2 className="w-4 h-4" />
+              Explore Algorithms
+            </TabsTrigger>
+            <TabsTrigger value="visualize" className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Sorting Visualizer
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Algorithm Grid */}
-        {filteredAlgorithms.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAlgorithms.map((algorithm) => (
-              <AlgorithmCard
-                key={algorithm.id}
-                algorithm={algorithm}
-                onClick={() => setSelectedAlgorithm(algorithm)}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-16">
-            <Code2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">No algorithms found</h3>
-            <p className="text-muted-foreground mb-4">
-              Try adjusting your search or category filter
-            </p>
-            <Button onClick={resetView} variant="outline">
-              Clear Filters
-            </Button>
-          </div>
-        )}
+          <TabsContent value="explore" className="space-y-8">
+            {/* Search and Filters */}
+            <div className="space-y-4">
+              <div className="relative max-w-md mx-auto">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search algorithms..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 transition-smooth focus:ring-primary/50"
+                />
+              </div>
+              
+              <div className="flex flex-wrap justify-center gap-2">
+                <Button
+                  variant={selectedCategory === null ? "default" : "outline"}
+                  onClick={() => setSelectedCategory(null)}
+                  className="transition-smooth"
+                >
+                  All Categories
+                </Button>
+                {algorithmCategories.map((category) => (
+                  <Button
+                    key={category}
+                    variant={selectedCategory === category ? "default" : "outline"}
+                    onClick={() => setSelectedCategory(category)}
+                    className="transition-smooth"
+                  >
+                    {category}
+                  </Button>
+                ))}
+              </div>
+              
+              {selectedCategory && (
+                <div className="text-center">
+                  <Badge variant="secondary" className="text-sm">
+                    {filteredAlgorithms.length} algorithms in {selectedCategory}
+                  </Badge>
+                </div>
+              )}
+            </div>
+
+            {/* Algorithm Grid */}
+            {filteredAlgorithms.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredAlgorithms.map((algorithm) => (
+                  <AlgorithmCard
+                    key={algorithm.id}
+                    algorithm={algorithm}
+                    onClick={() => setSelectedAlgorithm(algorithm)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <Code2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-2">No algorithms found</h3>
+                <p className="text-muted-foreground mb-4">
+                  Try adjusting your search or category filter
+                </p>
+                <Button onClick={resetView} variant="outline">
+                  Clear Filters
+                </Button>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="visualize">
+            <SortingVisualizer />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
